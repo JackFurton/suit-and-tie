@@ -1,5 +1,6 @@
 plugins {
     application
+    id("me.champeau.jmh") version "0.7.3"
 }
 
 group = "io.github.jackfurton"
@@ -27,6 +28,15 @@ application {
 
 tasks.withType<JavaCompile> {
     options.compilerArgs.addAll(listOf("-Xlint:all", "-Werror"))
+}
+
+jmh {
+    jmhVersion = "1.37"
+}
+
+// Benchmarks only run on demand (./gradlew jmh), but compile them in CI so they don't rot.
+tasks.check {
+    dependsOn(tasks.named("jmhClasses"))
 }
 
 tasks.test {
