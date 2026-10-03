@@ -1,14 +1,12 @@
 package io.github.jackfurton.suitandtie;
 
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 final class Commands {
 
-    private final Map<Key, byte[]> store = new HashMap<>();
+    private final BytesMap<byte[]> store = new BytesMap<>();
 
     Reply execute(List<byte[]> args) {
         if (args.isEmpty()) {
@@ -44,7 +42,7 @@ final class Commands {
         if (args.size() != 2) {
             return wrongArity("get");
         }
-        byte[] value = store.get(new Key(args.get(1)));
+        byte[] value = store.get(args.get(1));
         return value == null ? new Reply.Nil() : new Reply.Bulk(value);
     }
 
@@ -52,7 +50,7 @@ final class Commands {
         if (args.size() != 3) {
             return wrongArity("set");
         }
-        store.put(new Key(args.get(1)), args.get(2));
+        store.put(args.get(1), args.get(2));
         return new Reply.Simple("OK");
     }
 
